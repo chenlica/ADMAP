@@ -19,6 +19,7 @@ import {
   DASHBOARD_USER_QUOTA,
   DASHBOARD_USER_WORKFLOW,
   DASHBOARD_USER_FILE_DIRECTORY,
+  DASHBOARD_USER_METADATA_DIRECTORY
 } from "../../app-routing.constant";
 import {switchMap} from "rxjs/operators";
 import { environment } from "../../../environments/environment";
@@ -45,8 +46,12 @@ export class DashboardComponent implements OnInit {
   protected readonly DASHBOARD_USER_PROJECT = DASHBOARD_USER_PROJECT;
   protected readonly DASHBOARD_USER_WORKFLOW = DASHBOARD_USER_WORKFLOW;
   protected readonly DASHBOARD_USER_DATASET = DASHBOARD_USER_DATASET;
+
   protected readonly DASHBOARD_USER_FILE_DIRECTORY = DASHBOARD_USER_FILE_DIRECTORY
-  protected readonly DASHBOARD_USER_QUOTA = DASHBOARD_USER_QUOTA;
+  protected readonly DASHBOARD_USER_METADATA_DIRECTORY = DASHBOARD_USER_METADATA_DIRECTORY
+  protected readonly DASHBOARD_USER_FILE_DIRECTORY = DASHBOARD_USER_FILE_DIRECTORY
+
+protected readonly DASHBOARD_USER_QUOTA = DASHBOARD_USER_QUOTA;
   protected readonly DASHBOARD_USER_DISCUSSION = DASHBOARD_USER_DISCUSSION;
   protected readonly DASHBOARD_ADMIN_USER = DASHBOARD_ADMIN_USER;
   protected readonly DASHBOARD_ADMIN_GMAIL = DASHBOARD_ADMIN_GMAIL;
