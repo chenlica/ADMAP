@@ -54,22 +54,25 @@ DROP TYPE IF EXISTS user_role_enum CASCADE;
 DROP TYPE IF EXISTS privilege_enum CASCADE;
 DROP TYPE IF EXISTS contributor_role_enum CASCADE;
 DROP TYPE IF EXISTS specimen_sex_enum CASCADE;
+DROP TYPE IF EXISTS specimen_species_enum CASCADE;
 
 CREATE TYPE user_role_enum AS ENUM ('INACTIVE', 'RESTRICTED', 'REGULAR', 'ADMIN');
 CREATE TYPE privilege_enum AS ENUM ('NONE', 'READ', 'WRITE');
 CREATE TYPE contributor_role_enum AS ENUM (
-    'Contact Person',
-    'Data Collector',
-    'Data Curator',
-    'Project Leader',
-    'Project Manager',
-    'Project Member',
-    'Related Person',
     'Researcher',
-    'Research Group',
+    'Principal Investigator',
+    'Project Member',
     'Other'
 );
-CREATE TYPE specimen_sex_enum AS ENUM ('Male', 'Female', 'Unknown');
+CREATE TYPE specimen_species_enum AS ENUM (
+    'Human',
+    'Mouse',
+    'Rat',
+    'Degu',
+    'Monkey',
+    'Other'
+    );
+CREATE TYPE specimen_sex_enum AS ENUM ('Male', 'Female');
 
 
 -- ============================================
@@ -326,6 +329,7 @@ CREATE TABLE IF NOT EXISTS metadata
     owner_uid      INT NOT NULL,
     name           VARCHAR(128) NOT NULL,
     creation_time  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_public          BOOLEAN NOT NULL DEFAULT false,
     FOREIGN KEY (owner_uid) REFERENCES "user"(uid) ON DELETE CASCADE,
     CONSTRAINT unique_owner_name UNIQUE (owner_uid, name)
     );
@@ -337,7 +341,8 @@ CREATE TABLE IF NOT EXISTS metadata_contributor
     metadata_id       INT NOT NULL,
     name              VARCHAR(256) NOT NULL,
     creator           BOOLEAN NOT NULL DEFAULT FALSE,
-    type              contributor_role_enum,
+    role              contributor_role_enum,
+    email             VARCHAR(256),
     affiliation       VARCHAR(256),
     FOREIGN KEY (metadata_id) REFERENCES metadata(mid) ON DELETE CASCADE
     );
@@ -355,11 +360,14 @@ CREATE TABLE IF NOT EXISTS metadata_funder
 -- specimen table
 CREATE TABLE IF NOT EXISTS metadata_specimen
 (
-    sid           SERIAL PRIMARY KEY,
-    metadata_id   INT NOT NULL,
-    name          VARCHAR(256) NOT NULL,
-    age           INT NOT NULL,
-    sex           specimen_sex_enum,
+    sid               SERIAL PRIMARY KEY,
+    metadata_id       INT NOT NULL,
+    id                VARCHAR(256) NOT NULL,
+    species           specimen_species_enum NOT NULL,
+    species_other     VARCHAR(128), -- Nullable, used when species is "Other"
+    age_value         INT,
+    age_unit          VARCHAR(32), -- e.g. "Years" or "Months"
+    sex               specimen_sex_enum,
     FOREIGN KEY (metadata_id) REFERENCES metadata(mid) ON DELETE CASCADE
     );
 
